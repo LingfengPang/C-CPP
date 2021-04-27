@@ -6,7 +6,7 @@
         {
             "label": "task g++",
             "type": "shell",
-            "command": "D:\\Mingw\\mingw64\\bin\\g++.exe",
+            "command": "D:\\Qt\\Tools\\mingw810_64\\bin\\g++.exe",
             "args": [
                 "-g",
                 "${file}",
@@ -22,7 +22,7 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
                ],
                "options": {
-                "cwd": "D:\\Mingw\\mingw64\\bin"
+                "cwd": "D:\\Qt\\Tools\\mingw810_64\\bin"
                },
                "problemMatcher": [
                 "$gcc"
