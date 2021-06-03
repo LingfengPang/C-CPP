@@ -9,7 +9,9 @@
   - 黑马程序员视频
 - **数据结构**
   - 大话数据结构
-  - Leetcode刷题 
+  - Leetcode刷题
+- **计算机网络**
+  - 图解TCP/IP 
 - **其他C++相关的**
   - QT设计了简单的串口助手 
 
@@ -29,3 +31,4 @@
 - [刷题交流｜刷了 1000 多道算法题，一点心得](https://leetcode-cn.com/circle/discuss/tmztTe/)
 
 ### 参考视频
+- [黑马C++](https://www.bilibili.com/video/BV1et411b73Z)
