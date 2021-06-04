@@ -1,0 +1,33 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "task g++",
+            "type": "shell",
+            "command": "D:\\Qt\\Tools\\mingw810_64\\bin\\g++.exe",
+            "args": [
+                "-g",
+                "${file}",
+                //"E:\\C_Code\\CPP_learning\\eposide_10\\stock.cpp",
+               // "E:\\C_Code\\CPP_learning\\eposide_10\\stack.cpp",
+               // "E:\\C_Code\\CPP_learning\\eposide_11\\mytime0.cpp",
+               // "E:\\C_Code\\CPP_learning\\eposide_12\\stringbad.cpp",
+              //  "E:\\C_Code\\CPP_learning\\eposide_12\\string1.cpp",
+               // "E:\\C_Code\\CPP_learning\\eposide_13\\tabtenn1.cpp",
+               // "E:\\C_Code\\CPP_learning\\eposide_13\\brass.cpp",
+               // "E:\\C_Code\\CPP_learning\\eposide_13\\acctabc.cpp",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+               ],
+               "options": {
+                "cwd": "D:\\Qt\\Tools\\mingw810_64\\bin"
+               },
+               "problemMatcher": [
+                "$gcc"
+               ],
+               "group": "build"
+        }
+    ]
+}
