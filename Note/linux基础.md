@@ -94,3 +94,12 @@ sudo 命令 #sudo命令是switch user do的简写，意思是切换用户去做�
 
 ### clear
 清屏
+
+### reboot/poweroff命令
+终端上，reboot/poweroff命令来控制系统的重启与关机。
+
+### man
+```python
+man [要查询的内容] #除了–help选项外，Linux还提供了一个man命令， 可用于查看Linux系统自带的参考手册，该手册包含非常丰富的内容， 甚至在我们进行编程开发时还可以使用它来查看函数的接口
+man ls
+```

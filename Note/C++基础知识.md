@@ -1000,9 +1000,10 @@ void fun(const xxx);//xxx在函数内部不能修改
 ## 13.类
 class和struct差不多，struct默认权限是public,class默认权限是私有
 ### 13.1类的构造函数
-当用定义类时，C++会提供默认构造函数，默认析构函数,默认拷贝函数
+当用定义类时，C++会提供默认构造函数，默认析构函数,默认拷贝函数，赋值构造函数（operator=）
 当用于定义构造函数，将不会提供默认构造
 当用于定义拷贝函数，将不会提供其他构造函数
+
 ```cpp
   Person(/* args */);
   Person(int age);
@@ -1223,9 +1224,9 @@ class F{
 }
 ```
 ### 13.11运算符重载operat
-1.可重载的运算符
+- 1.可重载的运算符
 ![可重载的运算符](images/13.1.PNG)
-2.自增自减运算符
+- 2.自增自减运算符
 ```cpp
 //前置
 F operator++(){
@@ -1235,13 +1236,13 @@ F operator++(){
     return this;
 }
 //后置
-F operator++(int){
+F operator++(int){//加了int编译器会认为是后置
     F ret = *this
     ++*this
     return ret;
 }
 ```
-3.重载类型转换
+- 3.重载类型转换
 避免过度使用类型转换
 ```cpp
 //显示转换
@@ -1256,7 +1257,7 @@ F  operator int(){
 F ff;
 static_cast<int>(ff);
 ```
-4.重载<<
+- 4.重载<<
 一般左移运算符不作为成员函数重载
 而作为友元全局函数
 ```cpp
@@ -1268,6 +1269,44 @@ ostream& operator++(ostream &out,F f){
 
 cout <<F <<endl;//因为链式输出，所以F后面还能输出endl
 ```
+- 5.赋值
+要注意深拷贝
+```cpp
+class Person{
+public:
+	Person(int age){
+		//将年龄数据开辟到堆区
+		m_Age = new int(age);
+	}
+
+	//重载赋值运算符 
+	Person& operator=(Person &p)
+	{
+		if (m_Age != NULL)
+		{
+			delete m_Age;
+			m_Age = NULL;
+		}
+		//编译器提供的代码是浅拷贝
+		//m_Age = p.m_Age;
+		//提供深拷贝 解决浅拷贝的问题
+		m_Age = new int(*p.m_Age);
+		//返回自身
+		return *this;
+	}
+	~Person()
+	{
+		if (m_Age != NULL)
+		{
+			delete m_Age;
+			m_Age = NULL;
+		}
+	}
+
+	int *m_Age;
+};
+```
+
 ### 13.12类的存储空间
 - 1.非静态成员占用对象空间
 - 2.静态成员不占用对象空间
