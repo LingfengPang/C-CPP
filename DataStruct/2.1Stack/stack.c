@@ -4,24 +4,18 @@
 #define STACK_SIZE 100
 typedef int ElemType;
 
-
-
-
 void init_Stack(Stack *s){
     s->top= 0;
 }
-
 int length_Stack(Stack *s){
     return s->top;
 }
 void make_empty(Stack *s){
     s->top = 0;
 }                     
-
 bool is_empty(Stack *s){
     return s->top == 0;
 }
-
 bool is_full(Stack *s){
     return s->top == STACK_SIZE;
 }
@@ -35,7 +29,7 @@ bool push(int e,Stack *s){
         return true;
     }
 }
-//出栈
+//读取栈顶元素
 bool GetTop(ElemType *e,Stack *s){
     if(is_empty(s)){
         return false;
@@ -46,7 +40,7 @@ bool GetTop(ElemType *e,Stack *s){
     }
 }
 
-//读取栈顶数据
+//出栈
 bool pop(ElemType *e,Stack *s){
     if(is_empty(s)){
         return false;

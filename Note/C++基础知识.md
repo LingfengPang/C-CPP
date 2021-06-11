@@ -1724,6 +1724,7 @@ protected:
 基类中的非静态成员都会被派生类继承，只是无法访问私有成员，内存还是占着的。
 - 基类与派生类的转换
 
+
 ```cpp
 Quote item;
 Bulk_quote bulk;
@@ -1738,18 +1739,241 @@ Bulk_quote *q = &item;//错误，不存在基类向派生类的转换
 ```cpp
 class  F final{};//F不能作为基类
 ```
+- 构造与析构顺序
+先构造父类再构造子类，先析构子类再析构父类 
+
+- 父类与子类成员同名
+```cpp
+class B{
+    public:
+    void fun();
+    static int i;
+}
+class A:public B{
+    public:
+    void fun();
+    static int i;
+}
+
+A a;
+a.fun();//子类的直接调用
+a.B::fun();//加作用域
+a.i;//子类的直接调用
+a.B::a;//加作用域
+//直接作用域访问
+A::a;
+B::a;
+```
+- 多继承
+```cpp
+class A:public B,public C{
+
+}
+```
+如果继承的父类之间存在同名，则访问时需要加作用域
+所以不建议使用多继承 
+
+
+- 菱形继承（虚基类）
+​两个派生类继承同一个基类
+​又有某个类同时继承者两个派生类
+​这种继承被称为菱形继承，或者钻石继承
+```
+eg.羊和骆驼继承动物类，草泥马继承羊和骆驼，此时草泥马继承了羊的age,和骆驼的age，自己也需要个age，明显浪费了内存空间，所以引入虚基类
+```
+```cpp
+class Animal
+{
+public:
+	int m_Age;
+};
+
+//继承前加virtual关键字后，变为虚继承
+//此时公共的父类Animal称为虚基类
+class Sheep : virtual public Animal {};
+class Tuo   : virtual public Animal {};
+class SheepTuo : public Sheep, public Tuo {};
+
+void test01()
+{
+	SheepTuo st;
+	st.Sheep::m_Age = 100;//改变的是草泥马的m_Age
+	st.Tuo::m_Age = 200; //改变的是草泥马的m_Age
+	cout << "st.Sheep::m_Age = " << st.Sheep::m_Age << endl;//输出草泥马的m_Age
+	cout << "st.Tuo::m_Age = " <<  st.Tuo::m_Age << endl;////输出草泥马的m_Age
+	cout << "st.m_Age = " << st.m_Age << endl;
+}
+
+
+int main() {
+	test01();
+	system("pause");
+	return 0;
+}
+```
+### 多态
+- 多态的基本概念
+静态多态: 函数重载 和 运算符重载属于静态多态，复用函数名
+动态多态: 派生类和虚函数实现运行时多态
+静态多态和动态多态区别：
+静态多态的函数地址早绑定 - 编译阶段确定函数地址
+动态多态的函数地址晚绑定 - 运行阶段确定函数地址
+```cpp
+class Animal
+{
+public:
+	//Speak函数就是虚函数
+	//函数前面加上virtual关键字，变成虚函数，那么编译器在编译的时候就不能确定函数调用了。
+	virtual void speak()
+	{
+		cout << "动物在说话" << endl;
+	}
+    //内部会产生一个虚函数指针，指向虚函数表（Animal::speak()的地址),sizeof(Animal) = 4;
+};
+
+class Cat :public Animal
+{
+public:
+	virtual void speak()
+	{
+		cout << "小猫在说话" << endl;
+	}
+    //虚函数指针指向子类的方法覆盖父类
+};
+
+class Dog :public Animal
+{
+public:
+	void speak()
+	{
+		cout << "小狗在说话" << endl;
+	}
+};
+//我们希望传入什么对象，那么就调用什么对象的函数
+//如果函数地址在编译阶段就能确定，那么静态联编
+//如果函数地址在运行阶段才能确定，就是动态联编
+//如果父类不是虚函数，那么编译阶段就绑定了animal，不会产生多态
+void DoSpeak(Animal & animal)
+{
+	animal.speak();
+}
+//
+//多态满足条件： 
+//1、有继承关系
+//2、子类重写父类中的虚函数
+//多态使用：
+//父类指针或引用指向子类对象
+void test01()
+{
+	Cat cat;
+	DoSpeak(cat);
+	Dog dog;
+	DoSpeak(dog);
+}
+
+
+int main() {
+	test01();
+	system("pause");
+	return 0;
+}
+```
+
+- 多态的优点
+  - 结构清晰
+  - 结构性强
+  - 便于前期和后期扩展和维护
 
 ### 17.2虚函数
-1.概念
+- 1.概念
 很多概念上一章提到了
-2.final
+- 2.final
 将函数定义为final，派生类不能重写
+- 3.虚析构和纯虚析构
+多态使用时，如果子类中有属性开辟到堆区，那么父类指针在释放时无法调用到子类的析构代码
+解决方式：将父类中的析构函数改为虚析构或者纯虚析构
+虚析构和纯虚析构共性：
+  - 可以解决父类指针释放子类对象
+  - 都需要有具体的函数实现
+虚析构和纯虚析构区别：
+如果是纯虚析构，该类属于抽象类，无法实例化对象
+```cpp
+class Animal {
+public:
 
+	Animal()
+	{
+		cout << "Animal 构造函数调用！" << endl;
+	}
+	virtual void Speak() = 0;
+
+	//析构函数加上virtual关键字，变成虚析构函数
+	//virtual ~Animal()
+	//{
+	//	cout << "Animal虚析构函数调用！" << endl;
+	//}
+
+
+	virtual ~Animal() = 0;
+};
+//纯虚虚构必须实现
+Animal::~Animal()
+{
+	cout << "Animal 纯虚析构函数调用！" << endl;
+}
+
+//和包含普通纯虚函数的类一样，包含了纯虚析构函数的类也是一个抽象类。不能够被实例化。
+
+class Cat : public Animal {
+public:
+	Cat(string name)
+	{
+		cout << "Cat构造函数调用！" << endl;
+		m_Name = new string(name);
+	}
+	virtual void Speak()
+	{
+		cout << *m_Name <<  "小猫在说话!" << endl;
+	}
+	~Cat()
+	{
+		cout << "Cat析构函数调用!" << endl;
+		if (this->m_Name != NULL) {
+			delete m_Name;
+			m_Name = NULL;
+		}
+	}
+
+public:
+	string *m_Name;
+};
+
+void test01()
+{
+	Animal *animal = new Cat("Tom");
+	animal->Speak();
+
+	//通过父类指针去释放，会导致子类对象可能清理不干净，造成内存泄漏
+	//怎么解决？给基类增加一个虚析构函数
+	//虚析构函数就是用来解决通过父类指针释放子类对象
+	delete animal;
+}
+
+int main() {
+
+	test01();
+
+	system("pause");
+
+	return 0;
+}
+
+```
 ### 17.3抽象基类
 1.纯虚函数
 在函数后面加个 " =0 ",表示纯虚函数，即不做任何定义，但是纯虚函数也是可以有函数体的，必须在类的外部定义。
 2.抽象基类
-含有纯虚函数的类叫做抽象基类，抽象基类负责定义结构，后续其他类负责覆盖接口
+含有纯虚函数的类叫做抽象基类，抽象基类负责定义结构，后续其他类负责覆盖接口。抽象类无法实例化，子类继承基类后如果没有重写虚函数，则也是抽象类
 
 ### 17.4友元与继承
 当一个类将另一个声明为友元时，友元类对这个类有特殊访问权限，但友元的基类和派生类没有，友元不能继承
