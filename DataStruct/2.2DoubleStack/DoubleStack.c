@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <windows.h>
-#include <DoubleStack.h>
+#include "DoubleStack.h"
 
 void init_Stack(Stack *s){
     s->top1= -1;

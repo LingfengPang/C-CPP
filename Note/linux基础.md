@@ -124,7 +124,39 @@ sudo chmod 777 hello.sh  #赋予权限
 ./hello.sh 
 ```
 
-### 2.赋值
-var=1000
-var='1000 0'
-var="123 456"
+### 赋值
+```
+var=1234
+var1='1234 56'
+var2="1234 56"
+var3="${var2}aaa" #会解引用
+var4='${var2}aaa' #不会解引用
+var5=`pwd`
+var6=$(pwd)
+
+echo "$var"
+echo "$var1"
+echo "$var2"
+echo "$var3"
+echo "$var4"
+echo "$var2bb" #$识别全部
+echo "${var2}bb" #$识别{}里面的
+echo "$var5"
+echo "$var6"
+```
+输出
+```
+1234
+1234 56
+1234 56
+1234 56aaa
+${var2}aaa
+
+1234 56bb
+/home/onetree
+/home/onetree
+
+```
+
+### 特殊变量
+![shell](images/shell.png)

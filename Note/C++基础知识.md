@@ -2391,3 +2391,166 @@ for(size_t i =0;i<10;i++)
 ```
 int num = rand()%100;//生成0~99的随机数字
 ```
+
+## 文件操作
+文件打开方式：
+
+| 打开方式    | 解释                       |
+| ----------- | -------------------------- |
+| ios::in     | 为读文件而打开文件         |
+| ios::out    | 为写文件而打开文件         |
+| ios::ate    | 初始位置：文件尾           |
+| ios::app    | 追加方式写文件             |
+| ios::trunc  | 如果文件存在先删除，再创建 |
+| ios::binary | 二进制方式                 |
+
+**注意：** 文件打开方式可以配合使用，利用|操作符
+
+**例如：**用二进制方式写文件 `ios::binary |  ios:: out`
+### 写文件
+```cpp
+#include <fstream>
+void test01()
+{
+	ofstream ofs;
+	ofs.open("test.txt", ios::out);
+	ofs << "姓名：张三" << endl;
+	ofs << "性别：男" << endl;
+	ofs << "年龄：18" << endl;
+	ofs.close();
+}
+int main() {
+	test01();
+	system("pause");
+	return 0;
+}
+```
+
+### 读文件
+```cpp
+#include <fstream>
+#include <string>
+void test01()
+{
+	ifstream ifs;
+	ifs.open("test.txt", ios::in);
+	if (!ifs.is_open())
+	{
+		cout << "文件打开失败" << endl;
+		return;
+	}
+	//第一种方式,读1行
+	//char buf[1024] = { 0 };
+	//while (ifs >> buf)
+	//{
+	//	cout << buf << endl;
+	//}
+
+	//第二种
+	//char buf[1024] = { 0 };
+	//while (ifs.getline(buf,sizeof(buf)))
+	//{
+	//	cout << buf << endl;
+	//}
+
+	//第三种
+	//string buf;
+	//while (getline(ifs, buf))
+	//{
+	//	cout << buf << endl;
+	//}
+
+	char c;
+	while ((c = ifs.get()) != EOF)
+	{
+		cout << c;
+	}
+	ifs.close();
+
+
+}
+
+int main() {
+	test01();
+	system("pause");
+	return 0;
+}
+```
+
+### 写二进制文件
+```cpp
+#include <fstream>
+#include <string>
+
+class Person
+{
+public:
+	char m_Name[64];
+	int m_Age;
+};
+
+//二进制文件  写文件
+void test01()
+{
+	//1、包含头文件
+
+	//2、创建输出流对象
+	ofstream ofs("person.txt", ios::out | ios::binary);
+	
+	//3、打开文件
+	//ofs.open("person.txt", ios::out | ios::binary);
+
+	Person p = {"张三"  , 18};
+
+	//4、写文件
+	ofs.write((const char *)&p, sizeof(p));
+
+	//5、关闭文件
+	ofs.close();
+}
+
+int main() {
+
+	test01();
+
+	system("pause");
+
+	return 0;
+}
+```
+
+### 读二进制文件
+```cpp
+#include <fstream>
+#include <string>
+
+class Person
+{
+public:
+	char m_Name[64];
+	int m_Age;
+};
+
+void test01()
+{
+	ifstream ifs("person.txt", ios::in | ios::binary);
+	if (!ifs.is_open())
+	{
+		cout << "文件打开失败" << endl;
+	}
+
+	Person p;
+	ifs.read((char *)&p, sizeof(p));
+
+	cout << "姓名： " << p.m_Name << " 年龄： " << p.m_Age << endl;
+}
+
+int main() {
+
+	test01();
+
+	system("pause");
+
+	return 0;
+}
+```

@@ -62,84 +62,14 @@ bool pop(ElemType *e,LinkStackPtr *S){
 }
 
 
-//��׺����ʽ
-// int Count1(char *str){
-//     LinkStack s;
-//     ElemType e = 0;
-//     char strnum[20];
-//     int num1,num2;
-//     int i =0;
-//     int j = 0;
-//     int num = 0;
-//     // int e;
-//     int result = 0;
-//     bool flag = false;//是否入栈标志
-//     init_Stack(&s);
-//     while(str[i] != '\0'){
-//         if(str[i] == '+'){
-//             pop(&num1,&s);
-//             pop(&num2,&s);
-//             result = num2+num1;
-//             push(result,&s);
-//         }
-//         else if(str[i] == '-'){
-//             pop(&num1,&s);
-//             pop(&num2,&s);
-//             result = num2-num1;
-//             push(result,&s);
-//         }
-//         else if(str[i] == '*'){
-//             pop(&num1,&s);
-//             pop(&num2,&s);
-//             result = num2*num1;
-//             push(result,&s);
-//         }
-//         else if(str[i] == '/'){
-//             pop(&num1,&s);
-//             pop(&num2,&s);
-//             if(num1 == 0){
-//                 printf("���ܳ���0\n");
-//                 return  0;
-//             }
-//             else{
-//                 result = num2/num1;
-//                 push(result,&s);
-//                 }
-//         }
-//         else if(str[i] == ' '){
-//             if(flag){
-//                 strnum[j] = '\0';
-//                 num = atoi(strnum);
-//                 push(num,&s);
-//                 flag = false;
-//                 j = 0;
-//             }
-//         }
-//         else{
-//             if(isdigit(str[i]))
-//                 strnum[j++]=str[i];
 
-//             flag = true;
-//             if(j == 20){
-//                 printf("����̫��\n");
-//                 return 0;
-//             }
-//         }
-//         i++;   
-//     }
-//     if(length_Stack(&s) != 1){
-//         printf("ջδ��\n");
-//     }
-//     pop(&result,&s);
-//     return result;
-// }
 
 //后缀表达式求值
 static int RPN(char *str){
     int i = 0;
     int res = 0;
     int num = 0;
-    int a = 0,b = 0;
+    char a = 0,b = 0;
     int flag = 0;
     LinkStackPtr s;
     init_Stack(&s);
@@ -182,11 +112,87 @@ static int RPN(char *str){
     return s->next->data;
     
 }
+//中缀转后缀
+int toRPN(char *s){
+    LinkStackPtr S;
+    init_Stack(&S);
+    char c;
+    char str[30];
+    int j = 0;
+    int i = 0;
+    bool has_num = 0;
+    while(s[i]!='\0'){
+        if(s[i] == '+'||s[i] == '-'){
+            if(has_num){
+                str[j++] = ' ';
+                has_num = 0; 
+                }
+            if(GetTop(&c,&S)&&c!='('){
+                //如果由那么一定时符号
+                    while(GetTop(&c,&S)&&(c!='('||c!='*'||c!=' /')){
+                        pop(&c,&S);
+                        str[j++] = c;
+                        str[j++] = ' ';
+                    }  
+            }
+            push(s[i],&S);    
+        }
+        else if(s[i] == '*'||s[i] == '/'){
+            if(has_num){
+                str[j++] = ' ';
+                has_num = 0; 
+            }
+            if(GetTop(&c,&S)&&c!='('&&c!='+'&c!='-'){
+                //如果由那么一定时符号
+                    while(GetTop(&c,&S)&&c!='('){
+                        pop(&c,&S);
+                        str[j++] = c;
+                        str[j++] = ' ';
+                    }
+             
+            }
+            push(s[i],&S);  
+        }
+        else if(s[i] == '('){
+            if(has_num){
+                str[j++] = ' ';
+                has_num = 0;    
+            }
+            push(s[i],&S);         
+        }   
+        else if(s[i] == ')'){
+            if(has_num){
+                str[j++] = ' ';
+                has_num = 0; 
+            }
+            while(GetTop(&c,&S)&&c!='('){
+                pop(&c,&S);
+                str[j++] = c;
+                str[j++] = ' ';
+            }
+            pop(&c,&S);//把括号排出来
+        } 
+        else{//数字
+            str[j++] = s[i];
+            has_num = 1;
+        } 
+        i++;        
+    }
+    while(GetTop(&c,&S)){
+        pop(&c,&S);
+        str[j++] = c;
+        str[j++] = ' ';
+    }
+    str[j] = '\0';
 
+    return RPN(str);
+}
 //栈的应用
 int main(){
     char rpn[] = "9 3 1 - 3 * + 10 2 / +";
+    char rpn2[] = "9+(3-1)*3+10/2";
     printf("%d\n",RPN(rpn));
+    printf("%d\n",toRPN(rpn2));
     LinkStackPtr *s;
     ElemType e = 0;
     init_Stack(s);

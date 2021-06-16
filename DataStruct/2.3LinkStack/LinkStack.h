@@ -3,7 +3,7 @@
 
 #define STACK_SIZE 100
 //typedef int ElemType;
-typedef int ElemType;
+typedef char ElemType;
 
 typedef struct stacknode
 {

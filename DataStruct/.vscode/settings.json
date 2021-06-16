@@ -59,7 +59,8 @@
         "string_view": "cpp",
         "sstream": "cpp",
         "orderlist.h": "c",
-        "stack.h": "c"
+        "stack.h": "c",
+        "stdbool.h": "c"
     },
     "cmake.configureOnOpen": true
 }
