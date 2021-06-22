@@ -1,15 +1,31 @@
-
 #ifndef JOB_H
 #define JOB_H
 #include <string>
+#include <fstream>
+#define FILEPATH "save.txt"
+class Job;
 class JobMange
 {
 private:
     /* data */
+
 public:
-    static void showMenu();
+    bool isFileEmpty;
+    int nums;//职工人数
+    //职工数组指针
+    Job **jobArray;  
+    void showMenu();
+    void add();
+    void saveFile();
     JobMange(/* args */);
     ~JobMange();
+    int getEmp();
+    void Show();
+    void find();
+    void del();
+    void fix();
+    void sort();
+    void clean();
 };
 
 class Job

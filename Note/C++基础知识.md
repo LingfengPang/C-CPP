@@ -2114,7 +2114,7 @@ int compare(const T &v1,const T&v2){
 
 compare(1,0);
 compare(v1,v2);//v1,v2都是vector<int>
-
+compare<int>(v1,v2)//指定类型
 template <typename T1,typename T2>
 T1 fun(const T1 &v1,const T2&v2){
     //
@@ -2131,8 +2131,37 @@ template <typename T> int compare(const T &v1,const T&v2);
 extern template <typename T> int compare(const T &v1,const T&v2);
 ```
 
+函数模板必须指定T的类型
+```cpp
+template <typename T>
+void fun(){cout <<endl;}
 
+int main(){
+    fun();//错误，没有指定T的类型
+    fun<int>();
+}
 
+```
+
+模板函数不会进行隐式转化,需要指明类型
+```cpp
+template <typename T>
+void fun(T a,T b){cout <<endl;}
+
+int main(){
+    int a = 10;
+    char c = 'a';
+    fun(a,c);//错误，不会进行隐式转化
+    fun<int>(a,c);
+}
+
+```
+函数模板调用规则
+1.如果函数模板与普通函数都可以调用，优先调用普通函数
+2.可以通过空模板参数列表强制调用函数模板
+fun< >(a,c);
+3.函数模板可以发生函数重载
+4.如果函数模板可以产生更好的匹配，优先调用函数模板
 ### 18.2.类模板
 1.定义类模板
 ```cpp
@@ -2311,6 +2340,28 @@ void f(T... args)
 f();        //0
 f(1, 2);    //2
 f(1, 2.5, "");    //3details/84677316
+```
+### 模板的局限性
+```cpp
+class Person{
+    public:
+    int age;
+    string name;
+    Person(int age,string name);//构造函数懒得写了
+}
+template<class T>
+bool cmp(T &a,T&b){
+    return a == b;
+}
+//利用具体化Person的版本实现代码
+template<>bool cmp(Person &a,Person &b){
+    return a.age == b.age;
+}
+int main(){
+    Person p1("ZPC",10);
+    Person p2("PLF",10);
+    cmp(p1,p2);
+}
 ```
 ## 19 正则表达式
 学会什么是正则再看
