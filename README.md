@@ -35,4 +35,4 @@
 - [黑马C++](https://www.bilibili.com/video/BV1et411b73Z)
 
 ### 面经
-- [腾讯](https://leetcode-cn.com/circle/discuss/lSjULW/)
+- [腾讯 客户端日常实习 ](https://leetcode-cn.com/circle/discuss/lSjULW/)

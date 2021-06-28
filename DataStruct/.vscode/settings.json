@@ -60,7 +60,8 @@
         "sstream": "cpp",
         "orderlist.h": "c",
         "stack.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "windows.h": "c"
     },
     "cmake.configureOnOpen": true
 }

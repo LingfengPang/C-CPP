@@ -85,9 +85,11 @@ int &b = 0;//是错误的
 
 ### 3.2.指针
 指针也是指向一个对象的复合类型
+
 - 1.指针本身就是一个对象，允许赋值和拷贝，且在生命周期内可以指向不同的对象
 - 2.指针可以不初始化，但这样会有个随机的值
 - 3.指针可以获取对象的地址
+- 4.一个之中不管指向何种数据类型，其本身所需的内存大小是固定的
 ```cpp
 int a = 10;
 int *p = &a; //p是指向int类型的指针，用来存放a的地址
@@ -283,236 +285,96 @@ void fun1(){
 }
 ```
 
-***
-## 6.字符串
-### 6.1.string初始化
-![string初始化](/Note/images/5.1.PNG)
-![string初始化](/Note/images/5.5.PNG)
-### 6.2.string操作
-![string操作1](/Note/images/5.2.PNG)
-![string操作2](/Note/images/5.3.PNG)
-![string操作3](/Note/images/5.6.PNG)
-![string操作4](/Note/images/5.7.PNG)
-![string操作4](/Note/images/5.8.PNG)
-![string操作5](/Note/images/5.10.PNG)
-![string操作6](/Note/images/5.9.PNG)\
-![string操作7](/Note/images/5.11.PNG)
-补充
-ispunct（c） 当c位标点符号时为真（中文标点不包含）
-isspace(c) 当c为空格时为真
-显示字符串的每一个字符
-```
-for(auto c:str)
-    cout << c
-```
-### 6.3.string和C风格字符串
-![C风格字符串](/Note/images/5.4.PNG)
-```
-string s("C++");
-char *str = s;//错误
-const char *str1 = s.cstr();//正确,cstr()返回C风格字符串
-```
-## 7.容器
-### 7.1.vector初始化
-![vector初始化](/Note/images/7.1.PNG)
-注：对于string
-vector&lt;string> str{10}；//创建10个默认初始化的元素
-
-利用数组初始化
-```
-int a[10] = {……};
-vector<int> v1(begin(a),end(a));
-vector<int> v2(a,a+9)
-```
-### 7.2.vector操作
-![vector操作](/Note/images/7.2.PNG)
-
-### 7.3其他容器
+## 容器与迭代器
 ![其他容器](/Note/images/7.3.PNG)
-1.随机访问 vector deque
-2.中间插入删除 list fowar_list
-3.只在头尾插入删除 deque
-4.vector很好用
-
-### 7.4 容器操作
-![容器操作](/Note/images/7.4.PNG)
-![容器操作](/Note/images/7.5.PNG)
-
-### 7.5 容器初始化
-1.
-![容器初始化](/Note/images/7.6.PNG)
-
-接受一个容器创建拷贝的构造函数要求容器类型和元素类型必须一致。
+### vector 
+vector相较于数组是动态空间，可以动态扩展
+- vector构造函数
 ```cpp
-vector<int> a(b);//b也是vector<int>
+vector<T> v;//采用模板方式实现
+vector(v.begin(),v.end());
+vector(n,elem);//用n个elem
+vector(const vector &vec);//拷贝狗仔函数
+
+//演示一下
+vector<int> v1(10,1);
+vector<int> v2(v1.begin(),v2.begin());
+vector<int> v3(v1);
 ```
-接受两个迭代器创建拷贝的构造函数只要求元素类型一致或者能隐式转换得到。
+### string
+- 与char *区别
+char*是一个指针
+string是一个类
+- 构造
 ```cpp
-vector<int> a(b.begin(),b.end());//b也是vector<int>
+string();//空串
+string(const char* s);
+string(const string& str);
+string(int n,char c);//n个c初始化
 ```
-
-### 7.6 容器运算
-1.容器赋值运算
-![容器赋值运算](/Note/images/7.7.PNG)
-
-2.array的初始化
+- 赋值
 ```cpp
-array<int,42> a;//42个int的数组
-array<int,3> a = {1,2,3};//大小为3的数组
-array<int,3> a = {3};//a[0]为3，其余为0
-```
+string& operator=(const char* s);
+string& operator=(const string &s);
+string& operator=(char c);
 
-3.容器大小运算
+string& assign(const char* s);
+string& assign(const char* s,int n);//字符串前n个字符赋值
+string& assign(const string& s);
+string& assign(int n,char c);//n个c
 ```
-a.size();//a的大小
-a.empty();//a是否为空，forward_list不支持
-a.max_size();//a的最大容量
-```
-4.关系运算符
-两容器大小相同，元素相同则相等
-容器大小不同，但较小容器与较大容器前面一样，较大容器大
-容器大小不同，比较第一个对应位置出现不同的大小
- 
-### 7.7.顺序容器的操作
-1.添加元素
-![顺序容器的操作](/Note/images/7.8.PNG)
-2.访问元素
-![访问元素](/Note/images/7.9.PNG)
-上面back,front,at返回的都是引用
-c[n]下表运算符不会检查越界，所以尽可能使用at
-3.删除元素
-![删除元素](/Note/images/7.10.PNG)
-4.forward_list的操作
-![删除元素](/Note/images/7.11.PNG)
-5.改变容器大小
-![容器大小](/Note/images/7.12.PNG)
-![容器大小](/Note/images/7.13.PNG)
-6.注意事项
-容器的操作可能会使得迭代去失效，所以要保存迭代器
-insert返回是当前位置
-erase返回是删除后下一个位置
-不要保存end迭代器
-7.栈的操作
-![容器大小](/Note/images/7.15.PNG)
-8.队列的操作
-![容器大小](/Note/images/7.16.PNG)
-### 7.8容器适配器
-![容器大小](/Note/images/7.14.PNG)
-
-### 7.9关联容器
-1.种类
-![关联容器种类](/Note/images/7.17.PNG)
-关联容器与顺序容器有着根本的不同
-关联容器的元素是按关键词来保存和访问的，顺序容器是按他们在容器中的位置来顺序访问
-关键词在关联容器中起到重要的作用，map中的元素是（关键字—值）对，关键词是索引左右，值是与索引相关联的数据。set每个元素只包含一个关键字，支持高效的关键词查找
-标准库提供8个关联容器，主要是map/set，是否重复关键字，顺序保存容器与否
+- 拼接
 ```cpp
-#include<iostream>  
-#include<string>  
-#include<fstream>
-#include<vector> 
-#include<map>  
-#include<set> 
-#include<cctype>//ctype无法打开，包含tolower()函数和ispunct函数
-#include<algorithm>
-using namespace std;
- 
-int main(int argc, char**argv)  
-{ 
-	//map的定义
-	map<string,size_t> word_count;//map<key,value>
-    set<string> exclude = {"example","Example","eg"};//set中的元素必须有序且无重复
-    string word;
-    while(cin>>word){
-        if(exclude.find(word) == exclude.end())
-            word_count[word]++;//如果不在
-    }
-    map<string ,size_t>::iterator mapi;
-	for (mapi = word_count.begin(); mapi != word_count.end(); ++mapi)//C++ 11支持:const auto &s : word_count
-	{
-		//两个成员分别代表关键字和对应值
-		cout<<mapi->first<<" ";
-		cout<<mapi->second<<" "<<endl;
-	}
-    system("pause");
- 
-	return 0;  
-} 
+string& operator+=(const char* s);
+string& operator+=(const char c);
+string& operator+=(const string& s);
 
+string& append(const char* s);
+string& append(const char* s,int n);//字符串前n个字符拼接
+string& append(const string& s);
+string& append(int n,char c);//n个c
 ```
-
-map和set的关键字必须唯一
-2.pair
-![pair](/Note/images/7.18.PNG)
-
-3.一些操作
+- 查找和替换
 ```cpp
-set<string>::value_type v1;//string
-set<string>::key_type v1;//string
-map<string,int>::value_type v1;//pair<const string,int>
-map<string,int>::key_type v1;//string
-map<string,int>::map_type v1;//int
+int find(const string& str,int pos = 0);//从位置pos开始查找str
+int find(const char* str,int pos = 0);
+int find(const char* str,int pos ,int n);//从pos查找s的前n个字符
+int find(char c,int pos = 0);
+
+int rfind(const string& str,int pos = 0);//从倒数位置pos开始查找str
+int rfind(const char* str,int pos = 0);
+int rfind(const char* str,int pos ,int n);//从倒数pos查找s的前n个字符的位置
+int rfind(char c,int pos = 0);
+
+string& replace(int pos,int n,const string&str);//从pos开始n个字符替换为str
+string& replace(int pos,int n,const char *str);//从pos开始n个字符替换为str
 ```
 
-4.插入
-![插入](/Note/images/7.19.PNG)
+- 字符串比较
 ```cpp
-	map<string,size_t> word_count;
-    //set<string> exclude = {"example","Example","eg"};
-    string word;
-    while(cin>>word){
-        auto ret = word_count.insert({word,1});//first指向关键字，second指向是否存在了
-        if(!ret.second)
-            ++ret.first->second;
-    }
+int compare(const string& s) const;
+int compare(const char* s) const;
 ```
-5.删除
-![删除](/Note/images/7.20.PNG)
 
-6.访问元素
-下标访问，map返回的是map_type,且set不支持下标访问
-
-7.无序容器
-unordered_map
-相对于map，key不进行排序
-![无序容器](/Note/images/7.20.PNG)
-![访问元素](/Note/images/7.21.PNG)
-
-### 7.10 tuple
-tuple 跟 pair 类似,但pair只能有两个元素，而tuple可以可以有任何数量的元素
-![tuple](/Note/images/7.23.PNG)
-
-注意不能这样初始化
+- 按索引读写
 ```cpp
-tuple<size_t,size_t,size_t> threeD = {1,2,3};//错误
-tuple<size_t,size_t,size_t> threeD{1,2,3};
-
-for(int i = 0;i<3;i++)
-    auto a = get<i>(threD);//获取第i个成员
+char &operator[](int n);
+char &at(int n);
 ```
-tuple比较要类型都一样，成员数量一样
 
-
-
-### 7.11 bitset
-![bitset](/Note/images/7.24.PNG)
+- 插入和删除
 ```cpp
-bitset<16> bitvec(0x10ef);
-bitset<4> bitvec("1100");//1100
+string& insert(int pos,const char*s);
+string& insert(int pos,const string& str);
+string& insert(int pos,int n,char c);
+string& erase(int pos,int n = npos);//删除从Pos开始的n个字符
 ```
-![bitset操作](/Note/images/7.25.PNG)
 
-### 7.12 Stack
+- 字串获取
 ```cpp
-stack<type> StackName;		   //stack采用模板类实现构造，stack的默认构造形式
-stack(const stack & sta);      //拷贝构造函数
-stack& operator=(const stack& sta);    //重载等号操作符
-empty() 堆栈为空则返回真
-pop() 移除栈顶元素 （删除）
-push(e) 在栈顶增加元素 （增加）
-size() 返回栈中元素数目
-top() 返回栈顶元素，不删除（获取）
+string substr(int pos = 0,int n = npos) const;//返回从pos开始的n个字符
 ```
+
 
 
 ## 8.迭代器
@@ -919,7 +781,6 @@ f(3.14,1);//没有最佳匹配，所以调用错误
 注意：默认形参应该放在最后面
 ```cpp
 int fun (int a, int b = 10 ,char c = '');
-
 fun(1）;//相当于fun(1,10,'')
 ```
 
@@ -1671,9 +1532,10 @@ C++执行程序时候大致分为四个区域：
 - 全局区：存放全局，静态变量和常量，程序结束后由操作系统释放
 - 栈：由编译器自动分配，存放函数的局部变量和参数值,不要返回局部变量地址
 - 堆：由程序员管理，如果不释放，程序结束由操作系统释放，主要用new
-## 17.面向对象的编程
-### 17.1继承
-- 基本方式
+- 
+## 面向对象的编程
+### 继承
+- 一个例子
 基类
 ```cpp
 //定义基类
@@ -1714,27 +1576,34 @@ protected:
     double discount = 0.0;
 };
 ```
+
+
 - 三种继承方式
-  - 1.公有继承 class son：public father
+  - class son：public father
     不可访问基类的私有成员公共依旧公共,保护依旧保护
-    - 1.公有继承 class son：protect father
+  - class son：protect father
     不可访问基类的私有成员,公共和保护都变为派生类的保护
-    - 1.公有继承 class son：public father
+  - class son：public father
     不可访问基类的私有成员,公共和保护都变为派生类的私有
 基类中的非静态成员都会被派生类继承，只是无法访问私有成员，内存还是占着的。
 - 基类与派生类的转换
-
-
+- 
 ```cpp
 Quote item;
 Bulk_quote bulk;
 Quote *p =&item;
 p = &bulk;//p指向bulk的Quote部分
 Quote r = &bulk;//r指向bulk的Quote部分
-
 Bulk_quote *q = &item;//错误，不存在基类向派生类的转换
-
 ```
+
+基类的指针不能直接调用派生类的方法但是可以如下
+```cpp
+Quote *p;
+(static_cast<Bulk_quote*>(p))-> net_price(1);
+```
+
+
 - 防止继承，在类的后面加 final
 ```cpp
 class  F final{};//F不能作为基类
@@ -1812,6 +1681,8 @@ int main() {
 }
 ```
 ### 多态
+多态的主要用途是经由一个共同的接口来影响类型的封装，这个接口通常定义在基类中。
+当类型有所增加，修改时候，我们的程序代码无需修改
 - 多态的基本概念
 静态多态: 函数重载 和 运算符重载属于静态多态，复用函数名
 动态多态: 派生类和虚函数实现运行时多态
@@ -2162,8 +2033,12 @@ int main(){
 fun< >(a,c);
 3.函数模板可以发生函数重载
 4.如果函数模板可以产生更好的匹配，优先调用函数模板
+
+### 类模板分文件编写
+1.包含“.cpp”-#include"person.cpp"
+2.包含“.hpp”-#include"person.hpp"
 ### 18.2.类模板
-1.定义类模板
+- 1.定义类模板
 ```cpp
 template <typename T> bool operator==(const Blob<T>&, const Blob<T>&);
 template <typename T> bool operator!=(const Blob<T>&, const Blob<T>&);
@@ -2172,7 +2047,7 @@ template <typename T> bool operator>(const Blob<T>&, const Blob<T>&);
 template <typename T> bool operator<=(const Blob<T>&, const Blob<T>&);
 template <typename T> bool operator>=(const Blob<T>&, const Blob<T>&);
 
-template <typename T> class Blob {
+template <typename T = int> class Blob {//默认模板类型
     friend class ConstBlobPtr<T>;
     friend class BlobPtr<T>;
     friend bool operator==<T>(const Blob<T>&, const Blob<T>&);
@@ -2224,13 +2099,18 @@ private:
 };
 ```
 
-2.实例化
+- 2.实例化
+类模板无法自动推导，必须指定类型
+
 ```cpp
-Blob<int> ia;
+Blob ia0;//有默认构造类型int，如果没有默认则是错误的
+Blob<int> ia1;
 Blob<int> ia2 = {0,1,2,3,4}
 ```
 
-3.类模板外定义成员和构造函数
+- 3.类模板外定义成员和构造函数
+模板类的构造函数在调用时候创建
+普通类的构造函数在编译时创建
 在类内定义就不需要再次template <typename T>
 ```cpp
 template <typename T> Blob<T>& Blob<T>::operator=(const Blob<T>& lhs)
@@ -2240,11 +2120,11 @@ template <typename T> Blob<T>& Blob<T>::operator=(const Blob<T>& lhs)
 }
 ```
 
-4.与友元的关系
+- 4.与友元的关系
 友元需要前置声明，像1.cpp里面开头那样
 
 
-5.类模板里面的静态成员
+- 5.类模板里面的静态成员
 ```cpp
 #include <iostream>
 using namespace std;
@@ -2279,7 +2159,7 @@ int main()
 
 A<int> 和 A<double> 是两个不同的类。虽然它们都有静态成员变量 count，但是显然，A<int> 的对象 ia 和 A<double> 的对象 da 不会共享一份 count。
 ```
-6.模板函数的重载
+- 6.模板函数的重载
 重载
 ```cpp
 #include<iostream>
@@ -2326,7 +2206,7 @@ int main()
 
 ```
 
-7.可变参数模板
+- 7.可变参数模板
 ```cpp
 #include <iostream>
 using namespace std;
@@ -2340,6 +2220,19 @@ void f(T... args)
 f();        //0
 f(1, 2);    //2
 f(1, 2.5, "");    //3details/84677316
+```
+- 8类模板与继承
+子类继承的父类时模板时候必须指出父类的类型
+如果想灵活指出父类的类型，子类也可以指定为模板
+```cpp
+template<class T>
+class Base{
+    T m;
+}
+class Son:public Base<int>{};
+
+template<class T>
+class Son2:public Base<T>{};
 ```
 ### 模板的局限性
 ```cpp
