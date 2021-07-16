@@ -160,3 +160,229 @@ ${var2}aaa
 
 ### 特殊变量
 ![shell](images/shell.png)
+
+### gcc
+```python
+#直接编译成可执行文件
+gcc hello.c -o hello
+
+#以上命令等价于执行以下全部操作
+#预处理，可理解为把头文件的代码汇总成C代码，把*.c转换得到*.i文件
+gcc –E hello.c –o hello.i
+
+#编译，可理解为把C代码转换为汇编代码，把*.i转换得到*.s文件
+gcc –S hello.i –o hello.s
+
+#汇编，可理解为把汇编代码转换为机器码，把*.s转换得到*.o，即目标文件
+gcc –c hello.s –o hello.o
+
+#链接，把不同文件之间的调用关系链接起来，把一个或多个*.o转换成最终的可执行文件
+gcc hello.o –o hello
+```
+
+## 进程
+- 概念
+  - 程序只是一系列指令序列与数据的集合，它本身没有任何运行的含义， 它只是一个静态的实体。而进程则不同，它是程序在某个数据集上的执行过程， 它是一个动态运行的实体，有自己的生命周期，它因启动而产生，因调度而运行， 因等待资源或事件而被处于等待状态，因完成任务而被销毁。
+
+  - 进程和程序并不是一一对应的，一个程序执行在不同的数据集上运行就会成为不同的进程， 可以用进程控制块来唯一地标识系统中的每个进程。而这一点正是程序无法做到的， 由于程序没有和数据产生直接的联系，既使是执行不同的数据的程序， 他们的指令的集合依然是一样的，所以无法唯一地标识出这些运行于不同数据集上的程序。 一般来说，一个进程肯定有一个与之对应的程序，而且有且只有一个。 而一个程序有可能没有与之对应的进程（因为这个程序没有被运行）， 也有可能有多个进程与之对应（这个程序可能运行在多个不同的数据集上）。
+
+  - 进程具有并发性而程序没有。
+
+  - 进程是竞争计算机资源的基本单位，而程序不是。
+
+
+查看进程
+```python
+#在PC或开发板上执行以下命令
+ps –aux
+```
+
+- 程序状态
+R:运行态
+S：可中断睡眠状态，挂起状态
+D：不可中断的睡眠状态。通常等待I/O输入输出
+T：停止状态
+Z:退出状态
+X：退出状态，即将呗回收
+s:进程时绘画其首进程
+l:进程时多线程的
++：进程属于前台进程组
+<：高优先级任务
+
+![状态](https://doc.embedfire.com/linux/imx6/linux_base/zh/latest/_images/proces007.png)
+
+
+- 创建一个新进程
+  - system
+```cpp
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+    pid_t result;
+
+    printf("This is a system demo!\n\n");
+
+    /*调用 system()函数*/
+    result = system("ls -l");
+    //result = system("ls -l &");//在后台运行
+    printf("Done!\n\n");
+
+    return result;
+}
+```
+
+  - fork
+  通过fork()可以创建一个完全分离的子进程
+  在父进程中的fork()调用后返回的是新的子进程的PID。 新进程将继续执行，就像原进程一样，不同之处在于，子进程中的fork()函数调用后返回的是0， 父子进程可以通过返回的值来判断究竟谁是父进程，谁是子进程。
+
+  子进程与父进程一致的内容：
+  进程的地址空间。
+
+  进程上下文、代码段。
+
+  进程堆空间、栈空间，内存信息。
+
+  进程的环境变量。
+
+  标准 IO 的缓冲区。
+
+  打开的文件描述符。
+
+  信号响应函数。
+
+  当前工作路径。 
+
+  子进程独有的内容：
+
+  进程号 PID。 PID 是身份证号码，是进程的唯一标识符。
+
+  记录锁。父进程对某文件加了把锁，子进程不会继承这把锁。
+
+  挂起的信号。这些信号是已经响应但尚未处理的信号，也就是”悬挂”的信号， 子进程也不会继承这些信号。
+```cpp
+ #include <sys/types.h>
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ int main(void)
+ {
+     pid_t result;
+
+     printf("This is a fork demo!\n\n");
+
+     /*调用 fork()函数*/
+     result = fork();
+
+     /*通过 result 的值来判断 fork()函数的返回情况，首先进行出错处理*/
+     if(result == -1) {
+         printf("Fork error\n");
+     }
+
+     /*返回值为 0 代表子进程*/
+     else if (result == 0) {
+         printf("The returned value is %d, In child process!! My PID is %d\n\n", result, getpid());
+
+     }
+
+     /*返回值大于 0 代表父进程*/
+     else {
+         printf("The returned value is %d, In father process!! My PID is %d\n\n", result, getpid());
+     }
+
+     return result;
+ }
+```
+  - exec
+  这个系列函数主要是用于替换进程的执行程序， 它可以根据指定的文件名或目录名找到可执行文件，并用它来取代原调用进程的数据段、代码段和堆栈段， 在执行完之后，原调用进程的内容除了进程号外，其他全部被新程序的内容替换。 
+
+```cpp
+int main(void)
+{
+    int err;
+
+    printf("this is a execl function test demo!\n\n");
+
+    err = execl("/bin/ls", "ls", "-la", NULL);
+
+    if (err < 0) {
+        printf("execl fail!\n\n");
+    }
+
+    printf("Done!\n\n");
+}
+```
+ 所以示例程序中的“ Done! ”将不被输出，因为当前进程已经被替换了，一般情况下， exec系列函数函数是不会返回的，除非发生了错误。出现错误时， exec系列函数将返回-1，并且会设置错误变量errno。
+
+### 进程中止
+1.正常终止
+从main函数返回。
+调用exit()函数终止。
+调用_exit()函数终止。
+
+2.异常中止
+调用abort()函数异常终止。
+由系统信号终止。
+![exit](https://doc.embedfire.com/linux/imx6/linux_base/zh/latest/_images/proces014.png)
+
+### 等待进程
+wait()函数在被调用的时候，系统将暂停父进程的执行，直到有信号来到或子进程结束， 如果在调用wait()函数时子进程已经结束，则会立即返回子进程结束状态值。
+WIFEXITED(status) ：如果子进程正常结束，返回一个非零值
+WEXITSTATUS(status)： 如果WIFEXITED非零，返回子进程退出码
+WIFSIGNALED(status) ：子进程因为捕获信号而终止，返回非零值
+WTERMSIG(status) ：如果WIFSIGNALED非零，返回信号代码
+WIFSTOPPED(status)： 如果子进程被暂停，返回一个非零值
+WSTOPSIG(status)： 如果WIFSTOPPED非零，返回一个信号代码
+```cpp
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    pid_t pid, child_pid;
+    int status;
+
+    pid = fork();                  //(1)
+
+    if (pid < 0) {
+        printf("Error fork\n");
+    }
+    /*子进程*/
+    else if (pid == 0) {                  //(2)
+
+        printf("I am a child process!, my pid is %d!\n\n",getpid());
+
+        /*子进程暂停 3s*/
+        sleep(3);
+
+        printf("I am about to quit the process!\n\n");
+
+        /*子进程正常退出*/
+        exit(0);                          //(3)
+    }
+    /*父进程*/
+    else {                                //(4)
+
+        /*调用 wait，父进程阻塞*/
+        child_pid = wait(&status);        //(5)
+
+        /*若发现子进程退出，打印出相应情况*/
+        if (child_pid == pid) {
+            printf("Get exit child process id: %d\n",child_pid);
+            printf("Get child exit status: %d\n\n",status);
+        } else {
+            printf("Some error occured.\n\n");
+        }
+
+        exit(0);
+    }
+}
+```
+
+

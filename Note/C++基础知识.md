@@ -301,6 +301,51 @@ vector<int> v1(10,1);
 vector<int> v2(v1.begin(),v2.begin());
 vector<int> v3(v1);
 ```
+- 赋值操作
+```cpp
+vector& operator =(const vector&vec);
+assign(beg,end);
+assign(n,elen);//n个elem赋值给容器
+```
+
+- 容量与大小操作
+```cpp
+empty();//是否为空
+capacity();//容器的容量
+size();//返回容器中元素的个数
+resize(int num);//重新指定容器的长度，如果容器变长，则以默认值填充，变短，则删除
+resize(int num,elem);//重新指定容器的长度，如果容器变长，则以elem填充，变短，则删除
+```
+- 插入与删除
+```cpp
+push_back(e);
+pop_back();//删除最后一个元素
+insert(const_iterator pos,ele);//指定pos插入ele
+insert(const_iterator pos,int count ,ele);//指定pos插入count个元素ele
+erase(const_iterator pos);//删除pos位置的元素
+erase(const_iterator star,const_iterator end);//删除star到end之间的元素
+clear();//清除元素
+```
+
+- 数据读写
+```cpp
+at(int i);
+operator[](int i);
+front();//返回第一个元素
+back();//返回最后一个元素
+```
+
+- 元素互换
+```cpp
+swap(vec);//将自己本身与vec互换
+```
+
+-预留空间
+```cpp
+reserve(int len);//容器预留len个元素长度，预留位置不初始化，元素不可访问                                                                                                                                                                     
+```
+
+
 ### string
 - 与char *区别
 char*是一个指针
@@ -375,7 +420,313 @@ string& erase(int pos,int n = npos);//删除从Pos开始的n个字符
 string substr(int pos = 0,int n = npos) const;//返回从pos开始的n个字符
 ```
 
+- 其他
+```cpp
+char c
+isalnum(c);//是否为数字或字符串
+tolower(c);//转化为小写
+```
 
+### deque容器
+双端队列，头端可进行插入删除操作
+- 与vector区别
+vector头插效率低
+deque头插和删快
+vector访问元素快
+- 构造函数
+```cpp
+deque<T> d;
+deque(beg,end);
+deque(n,elem);
+deque(const deque&d);
+```
+
+- 赋值hanshu
+```cpp
+deque &operator=(const deque&d);
+assign(beg,end);
+assign(n,elem);
+```
+
+- 大小操作
+```cpp
+deque.empty();
+deque.size();
+deque.rsize(num);//重新指定容器长度为num，变长以默认值填充，变短删除
+deque.rsize(num,elem);//重新指定容器长度为num，变长以num填充，变短删除
+```
+
+- 插入删除
+```cpp
+push_back(elem);
+push_front(elem);//头插
+pop_back();//
+pop_fornt();
+
+insert(pos,elem);//pos位置插入elem
+insert(pos,n,elem);//pos位置插入n个elem
+insert(pos，beg,end);//pos位置插入beg到end
+clear();
+erase(beg,end);
+erase(pos);
+```
+
+- 读写
+```cpp
+at(int i);
+operator[];
+front();//返回第一个元素
+back();//返回最后一个元素
+```
+### stack
+先进后出
+- 构造
+```cpp
+stack<T> s;
+stack(const stack&s);
+```
+
+- 赋值
+```cpp
+stack& operator=(const stack &stk);
+```
+
+- 数据存取
+```cpp
+push(elem);//向栈顶添加元素
+pop();//从栈顶移除第一个元素
+top();//返回栈顶元素
+```
+
+- 大小操作
+```cpp
+empty();
+size();
+```
+
+### queue
+先进先出
+- 构造
+```cpp
+queue<T> s;
+queue(const stack&s);
+```
+
+- 赋值
+```cpp
+queue& operator=(const queue &stk);
+```
+
+- 数据存取
+```cpp
+push(elem);//向队尾添加元素
+pop();//从队头移除第一个元素
+back();//返回最后一个元素
+front();//返回第一个元素
+```
+
+- 大小操作
+```cpp
+empty();
+size();
+```
+
+### list
+双向链表
+- 构造函数
+```cpp
+list<T> l;
+list(beg,end);
+list(n,elem);
+list(const list&lst)
+```
+
+-赋值与交换
+```cpp
+assign(beg,end);
+assign(n,elem);
+list& operator=(const list &lst);
+swap(lst);//将lst于本身的元素互换
+```
+- 大小操作
+```cpp
+empty();
+size();
+rsize(num);//重新指定容器长度为num，变长以默认值填充，变短删除
+rsize(num,elem);//重新指定容器长度为num，变长以num填充，变短删除
+```
+- 插入删除
+```cpp
+push_back(elem);
+push_front(elem);//头插
+pop_back();//删除最后一个
+pop_fornt();//删除第一个
+
+insert(pos,elem);//pos位置插入elem
+insert(pos,n,elem);//pos位置插入n个elem
+insert(pos，beg,end);//pos位置插入beg到end
+clear();
+erase(beg,end);
+erase(pos);
+remove(elem);//删除容器中所有于elem值匹配的元素
+```
+
+- 数据存取
+```cpp
+front();//返回第一个元素
+back();//返回最后一个元素
+```
+
+- 反转
+```cpp
+reserve();//反转
+```
+
+### set/multiset
+底层：二叉树
+set:不可重复，插入数据时返回是否成功，默认从小到大排
+```cpp
+pair<set<int>::iterator bool> ret = s.insert(10);
+if(ret.second){
+    //成功插入
+}
+```
+multiset:可重复，插入数据时不会检测是否成功
+- 构造
+```cpp
+set<T> s;
+set(const set& s);
+```
+
+- 赋值
+```cpp
+set& operator=(const set &s);
+```
+
+- 大小操作和交换
+```cpp
+size();
+empty();
+swap(st);//交换两个容器
+```
+
+- set插入和删除
+```cpp
+insert(elem);
+clear();
+erase(pos);
+erase(beg,end);
+erase(elem);
+```
+
+- 查找
+```cpp
+find(key);
+count(key);
+```
+- 改变排序规则
+1.
+```cpp
+class Mycompaer{
+    public:
+    bool operator()(int v1,int v2){
+        return v1>v2;
+    }
+}
+
+set<int,Mycompaer> s;
+s.insert(19);
+s.insert(38);
+s.insert(20);//将会从大到小排序
+```
+
+2.自定义的类型一定要指定排序规则
+```cpp
+class Person(){
+    private:
+    int age;
+    string name;
+    public:
+    Person(string name,int age);
+}
+class Mycompaer{
+    public:
+    bool operator()(const Person& v1, Person& v2){
+        return v1.getage()>v2.getage();
+    }
+}
+
+set<Person,Mycompaer> s;
+Person p1("11",1);
+Person p1("22",3);
+Person p1("33",2);
+s.insert(p1);
+s.insert(p2);
+s.insert(p3);//将会从大到小排序
+```
+### pair
+成对出现的数据
+```cpp
+pair<type,type> p(value1,value2);
+pait<type,type> p = make_pair(value1,value2);
+
+p.first;//第一个数据
+p.second;//第二个数据
+```
+
+### map/multimap
+map所有元素都为pair
+第一个元素为key,第二个元素为value
+所有元素按照key自动排序
+本质：关联容器，二叉树
+
+map:不允许重复key
+multimap:允许重复key
+
+- 构造
+```cpp
+map<T1,T2> m;
+map(const map& m);
+```
+
+- 赋值
+```cpp
+map& operator=(const map& m);
+```
+
+- 大小于交换
+```cpp
+size();
+empty();
+swap(m);//交换两个集合容器
+```
+
+- 插入与删除
+```cpp
+insert(elem);
+clear();
+erase(pos,beg);
+erase(key);
+```
+
+- 查找
+```cpp
+find(key);
+count(key);
+```
+
+- 排序
+默认以key进行排序
+```cpp
+class MyCompare{
+    public:
+    bool operator()(int v1,int v2){
+        return v1 > v2;
+    }
+};
+
+map<int,int,MyCompare> m;//key将会以从大到小排序
+```
 
 ## 8.迭代器
 ### 8.1.迭代器运算
@@ -856,19 +1207,50 @@ for (auto f : vec)
 ```cpp
 void fun(const xxx);//xxx在函数内部不能修改
 ```
+### 函数对象
+重载函数调用操作符的类，器对象成为函数对象
 
+重载（），行为像函数调用，也叫仿函数
+
+仿函数是一个类，不是一个函数
+
+```cpp
+class Add{
+    public:
+    int operator()(int a,int b){
+        return a+b;
+    }
+}
+
+Add add;
+add(10,10);
+```
+### 谓词
+返回bool类型的仿函数
+如果operator接收1个参数则为一元谓词
+如果operator接收2个参数则为2元谓词
 * * *
 ## 13.类
 class和struct差不多，struct默认权限是public,class默认权限是私有
+### 类的内存情况
+- 成员函数不占用类对象的内存空间
+- 一个类对象至少占用1个字节的内存空间
+- 成员变量是占用对象的内存空间
+- 成员函数 每个类只诞生 一个（跟着类走），而不管你用这个类产生了多少个该类的对象;
+- 类的非静态成员变量存在在类的内部，静态成员不保存在内部
+- 虚函数：不管几个虚函数，sizeof()都是多了4个字节
+  - 类里只要有一个虚函数（或者说至少有一个虚函数），这个类会产生一个指向虚函数表的指针
+  - 类本身 指向虚函数的指针（一个或者一堆）要有地方存放，存放在一个表格里，这个表格我们就称为“虚函数表(virtual table【vtbl】)”；这个虚函数表一般是保存在可执行文件中的，在程序执行的时候载入到内存中来。虚函数表是基于类的，跟着类走的
+  - 因为有了虚函数的存在，导致系统往类对象中添加了一个指针，这个指针正好指向这个虚函数表，很多资料上把这个指针叫vptr；这个vptr的值由系统在适当的时机（比如构造函数中通过增加额外的代码来给值）；
 ### 13.1类的构造函数
-当用定义类时，C++会提供默认构造函数，默认析构函数,默认拷贝函数，赋值构造函数（operator=）
+当用定义类时，C++会提供默认构造函数，默认析构函数,默认拷贝函数，赋值构造函数（operator=）,这些都是inline的,且其不会初始化成员函数
 当用于定义构造函数，将不会提供默认构造
 当用于定义拷贝函数，将不会提供其他构造函数
 
 ```cpp
   Person(/* args */);
   Person(int age);
-  //下面这个构造函数后面赋值顺序是跟name，address声明顺序一样的
+  //下面这个构造函数后面赋值顺序是跟name，address声明顺序一样的。建议使用如下的初始化方式，这种方法效率更高
   Person(std::string name, std::string address) :name(name), address(address) {}
   //委托构造函数(初始化列表)
   Person(std::string name):Person(name,"none"){}
@@ -1168,11 +1550,6 @@ public:
 };
 ```
 
-### 13.12类的存储空间
-- 1.非静态成员占用对象空间
-- 2.静态成员不占用对象空间
-- 3.函数也不占用对象空间，所有函数共享一个函数实列
-- 4.空对象占用1字节
 
 ### 13.12空指针
 ```cpp
@@ -1534,6 +1911,8 @@ C++执行程序时候大致分为四个区域：
 - 堆：由程序员管理，如果不释放，程序结束由操作系统释放，主要用new
 - 
 ## 面向对象的编程
+- 派生类对象 它是包含 基类子对象的。
+- 如果派生类只从一个基类继承的话，那么这个派生类对象的地址和基类子对象的地址相同
 ### 继承
 - 一个例子
 基类
@@ -1601,6 +1980,9 @@ Bulk_quote *q = &item;//错误，不存在基类向派生类的转换
 ```cpp
 Quote *p;
 (static_cast<Bulk_quote*>(p))-> net_price(1);
+
+if(Bulk_quote *q = dynamic_cast<Bulk_quote*>(p))//成本较高但更好
+    q->net_price(1);
 ```
 
 

@@ -23,4 +23,7 @@ void inOrder1(BTNode *b);
 void postOrder1(BTNode *b);
 
 void levelOrder(BTNode *b);
+
+BTNode *createBT1(char *pre,char *in,int n);
+BTNode *createBT2(char *in,char* post,int n);
 #endif

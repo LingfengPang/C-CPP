@@ -208,8 +208,44 @@ void levelOrder(BTNode *b){
         }
     }
 }
+//先序与中序构建二叉树
+BTNode *createBT1(char *pre,char *in,int n){
+    BTNode *b;
+    char *p;
+    int k;
+    if(n<=0)
+        return NULL;
+    b = (BTNode *)malloc(sizeof(BTNode));//创建二叉树节点
+    b->data = *pre;
+    for(p = in;p<in+n;p++){
+        if(*p == *pre)
+            break;
+    }
+    k = p - in;
+    b->lchild = createBT1(pre+1,in,k);
+    b->rchild = createBT1(pre+k+1,p+1,n-k-1);
+    return b;
+}
 
-
+//中序和后序构建二叉树
+BTNode *createBT2(char *in,char* post,int n){
+    BTNode *b;
+    char *p,r;
+    int k;
+    if(n<=0)
+        return NULL;
+    r = *(post+n-1);
+    b = (BTNode *)malloc(sizeof(BTNode));//创建二叉树节点
+    b->data = r;
+    for(p = in;p<in+n;p++){
+        if(*p == r)
+            break;
+    }
+    k = p - in;
+    b->lchild = createBT2(in,post,k);
+    b->rchild = createBT2(p+1,post+k,n-k-1);    
+    return b;
+}
 int main(){
     BTNode **b;
     char *str = "A(B(D(,G)),C(E,F))";
