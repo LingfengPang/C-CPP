@@ -10,7 +10,7 @@ int BinartSearch(int *a,int n,int key){
     while(low<=high){
         mid = (low+high)/2;
         if(key<a[mid]){
-            high = mid-1
+            high = mid-1;
         }
         else if(key>a[mid]){
             low = mid+1;
@@ -22,8 +22,9 @@ int BinartSearch(int *a,int n,int key){
 }
 
 //斐波那契查找
+int F[13];//斐波那契数列
 int FibonacciSearch(int *a,int n,int key){
-    int low,int high,mid,i,k;
+    int low, high,mid,i,k;
     low = 1;
     high = n;
     k = 0;
