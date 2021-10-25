@@ -1,5 +1,20 @@
 {
     "files.associations": {
-        "vector": "cpp"
-    }
+        "vector": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "memory_resource": "cpp",
+        "optional": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "*.tcc": "cpp"
+    },
+    "aliosStudio.name": "helloworld",
+    "aliosStudio.hardware.board": "haas100",
+    "aliosStudio.comPort": "COM9                ",
+    "aliosStudio.hardware.baudrate": "1500000"
 }

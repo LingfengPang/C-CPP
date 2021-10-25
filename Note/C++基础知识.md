@@ -317,6 +317,7 @@ resize(int num);//重新指定容器的长度，如果容器变长，则以默�
 resize(int num,elem);//重新指定容器的长度，如果容器变长，则以elem填充，变短，则删除
 ```
 - 插入与删除
+vector扩容时候，容量是成倍增长的
 ```cpp
 push_back(e);
 pop_back();//删除最后一个元素
@@ -896,30 +897,40 @@ sizeof(p);//p是一个指针，表述地址的大小，64位系统是8，32位�
 sizeof(*p)；//表示指向对象类型的大小
 ```
 ### 10.7.强制转换
+
+
+
 cast_name&lt;type>(experssion)
 type表示转换的目标类型
 experssion表示要转换的值
 
 cast_name:
-1.static_cast
+- 1.static_cast
 只要不包含底层const(声明指向常量的指针也就是 底层const)，就可以使用static_cast
-
+```cpp
 void *p = &b
 double *dp = static_cast&lt;double *>(p)
-
 ```
 
-```
 
-2.const_cast
+- 2.const_cast
 改变对象的底层const
 const char *c
 char *cc = const_cast&lt;char *>c
 const_cast&lt;string>c是错误的，const_cast不能转换类型
 
-3.reinterpret_cast
+- 3.reinterpret_cast
 用来处理无关类型之间的转换；它会产生一个新的值，这个值会有与原始参数（expression）有完全相同的比特位。
-
+- 4.C语言的强制转换
+  (类型名)表达式
+  类型名是一元运算符，优先级高于二元
+  ```cpp
+  long i;
+  int j = 10000;
+  i = j*j;//溢出
+  i = long j*j;//相当于（（long）j）*j  l*i->l;
+  i = long (j*j);//溢出
+  ```
 ### 10.8.运算优先级
 ![运算优先级1](/Note/images/10.2.PNG)
 ![运算优先级2](/Note/images/10.3.PNG)
@@ -1811,6 +1822,31 @@ int main()
 
 
 ## 16.内存管理
+```cpp
+void *p = malloc(512);
+delete p
+
+int *p2 = new int;
+delete p2;
+
+void *p3 = operator new(512);
+::operator delete(p3);
+
+//一下使用C++标准库提供的alloct
+int *p4 = allocator<int>().allocate(3,(int*)0);//第二个参数无意义
+
+allocator<int>().deallocate(p4,3);//申请了三个必须释放3个
+
+int *p5 = allocator<int>().allocate(5);
+
+allocator<int>().deallocate(p5,5);
+
+//G2.9
+int *p5 = alloc::allocate(5);
+
+allocator<int>().deallocate(p5,5);
+
+```
 ### 16.1.new与delete
 ```cpp
 int *p = new int(10);
@@ -1903,13 +1939,23 @@ alloc.destroy(--q);
 ```
 
 ![allocator算法](images/16.6.PNG)
+
+4.placement new
+```cpp
+char *buf = new char[3];
+Complex *pc = new(buf)Complex(1,2);
+```
 ### 16.5.内存区域
 C++执行程序时候大致分为四个区域：
 - 代码区：存放函数体的二进制代码（机器指令），由操作系统管理，是共享和只读的
 - 全局区：存放全局，静态变量和常量，程序结束后由操作系统释放
 - 栈：由编译器自动分配，存放函数的局部变量和参数值,不要返回局部变量地址
 - 堆：由程序员管理，如果不释放，程序结束由操作系统释放，主要用new
-- 
+
+
+
+
+
 ## 面向对象的编程
 - 派生类对象 它是包含 基类子对象的。
 - 如果派生类只从一个基类继承的话，那么这个派生类对象的地址和基类子对象的地址相同
