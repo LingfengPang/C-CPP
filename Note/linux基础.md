@@ -1040,5 +1040,244 @@ onetree@ubuntu:~/linuxLearn$ nl seedtest.txt |sed '2,5d'
 sed '2a d'第二行后面加上d
 sed '2a d\
 d'  第二行后面加上d，另增加一行d
+sed '2,5c No 2-5 number'将2-5行替换成”No 2-5 number“
+```
 
+## shell编程
+### 输出
+```
+#!/bin/bash
+echo "hello world"
+exit 0
+```
+
+### read读取
+```
+#!bin/bash
+read -p "Please Enter name: " name
+echo "Your name is: ${name}"
+
+```
+
+### 运算
+```
+#!/bin/bash
+echo "Enter 2 nums:"
+read -p "first num:" firstnum
+read -p "second num:" secnum
+res=$((${firstnum}*${secnum}))
+echo "\n result is ${res}"
+
+```
+
+### test
+```
+#!/bin/bash
+echo "Please input filename:"
+read -p "FIlename:" filename
+test -z ${filename} && echo "Your must input filename" && exit 0
+#test !-e ${filename} && echo "Not exist" && exit 0
+test -f ${filename} && filetype="regulare file"
+test -d ${filename} && filetype="directory"
+test -r ${filename} && perm="read"
+test -w ${filename} && perm="${perm} write"
+
+echo "THe filename:${filename} is ${filetype} and ${perm}"
+
+```
+
+### if
+```
+#!/bin/bash
+PATH=/bin:/sbin:/usr/bin:/user/sbin:usr/local/bin:/usr/local/sbin:~/bin
+read -p "Enter(y/n):" yn
+if [ "$yn" == "Y" ] || [ "$yn" == "y" ];then
+
+	echo "Yes"
+	exit 0
+
+elif [ "$yn" == "N" ]||[ "$yn" == "n" ];then
+	echo "No"
+	exit 0
+else
+	echo "none"
+fi
+echo "other"
+
+```
+
+### case
+```
+
+#!/bin/bash
+
+case $变量 in
+	"第一个变量内容")
+		程序段
+		;;
+	"第二个变量内容")
+		程序段
+		;;
+	*)
+		程序段
+    exit 1
+		;;
+esac
+
+
+#!/bin/bash
+
+case ${1} in
+	"hello")
+		echo "Hello"
+		;;
+	"")
+		echo "You must input ,ex>{${0} some word}"
+		;;
+	*)
+		echo "${1}"
+		;;
+esac
+
+
+
+
+
+onetree@ubuntu:~/shell_learn$ sh hello.sh hellp
+hellp
+onetree@ubuntu:~/shell_learn$ sh hello.sh hello
+Hello
+onetree@ubuntu:~/shell_learn$ sh hello.sh 
+You must input ,ex>{hello.sh some word}
+
+```
+
+
+### function
+```
+#!/bin/bash
+
+function printff(){
+	echo "hello ${1}"
+}
+
+printff 1;
+printff 2;
+
+```
+
+### loop
+```
+#!/bin/bash
+while [ "${yn}" != "Y" ]
+do
+	read -p "loop1 Y?" yn
+	echo "input loop1 is ${yn}"
+done
+
+echo "while test ok"
+
+until [ "${yn}" == "y" ]
+do
+	read -p "y?" yn
+done
+
+echo "until test ok"
+
+
+for animal in dog cat elephant
+do
+	echo "${animal}"
+done
+echo "for test ok"
+
+for (( i=1;i<=10;i=i+1))
+do
+	echo "$[i]"
+done
+
+```
+
+### 随机数
+```
+#!/bin/bash
+
+num=9
+res=$(( ${RANDOM} * ${num}  / 32767 + 1 ))
+echo ${res}
+
+```
+
+## 程序和进程
+程序：通常为二进制程序，防止再存储媒介中，以物理文件的形式存在
+进程：程序被触发后，执行者的权限与属性，程序的代码和所需数据都会被加载到内存中，操作系统给予这个内存中的单元一个标识符（PID），可以说进程是一个正在运行的程序
+
+```
+#静态显示进程
+ps -l 仅仅查看跟自己bash有关的进程
+ps -aux 显示所有进程
+
+#动态显示进程
+top -d 2 2s刷新一次
+
+#删除进程
+kill
+
+#查看内存使用状况
+free -m
+
+#查看内核相关信息
+uname -a
+
+#查看系统启动时间与任务负载
+uptime
+
+#追踪网络
+netstat
+
+#分析内核产生的信息
+dmsg
+
+#检测系统资源变化
+vmstat
+
+#借由文件找出正在使用该文件的进程
+fuser
+fuser -uv /proc
+```
+
+## 服务
+```
+systemctl [command] [unit]
+start：立刻启动后面接的 unit。
+stop：立刻关闭后面接的 unit。
+restart：立刻关闭后启动后面接的 unit，亦即执行 stop 再 start 的意思。
+reload：不关闭 unit 的情况下，重新载入配置文件，让设置生效。
+enable：设置下次开机时，后面接的 unit 会被启动。
+disable：设置下次开机时，后面接的 unit 不会被启动。
+status：目前后面接的这个 unit 的状态，会列出有没有正在执行、开机时是否启动等信息。
+is-active：目前有没有正在运行中。
+is-enabled：开机时有没有默认要启用这个 unit。
+kill ：不要被 kill 这个名字吓着了，它其实是向运行 unit 的进程发送信号。
+show：列出 unit 的配置。
+mask：注销 unit，注销后你就无法启动这个 unit 了。
+unmask：取消对 unit 的注销。
+
+
+systemctl status cpu.service
+```
+
+
+## GCC
+```
+产生hello.o,不会产生二进制执行文件
+gcc -c hello.c
+优化编译
+gcc -O hello.c -c
+链接外部函数库，如math.h
+gcc sin.c -lm -L/lib -I/usr/include
+#输出二进制文件名
+gcc -o hello hello.c
+#会产生警告
+gcc -o hello hello.c -Wall
 ```

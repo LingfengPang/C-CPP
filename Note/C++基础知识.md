@@ -1,7 +1,7 @@
-# C++ 基础知识
+# C++ 知识
 [TOC]
-##  1.基本类型
-### 1.1.算术类型
+##  基本类型
+### 算术类型
 ![算术类型](/Note/images/1.1.PNG)
 |  类型   | 字节数  | 备注|
 |  ----  | ----  |----  |
@@ -13,22 +13,22 @@
 | double| 8 | 15~16位有效数字|
 | char| 1 | 
 | bool| 1 | 
-
+|指针 | 32位下为4，64位下为8||
 
 ```cpp
 bool flag;
 cin << flag;//不能输入“true”和“false”
 ```
-### 1.2.类型转换
+### 类型转换
 注意有符号和无符号之间的转换
 当一个算式既有有符号又有无符号时候，值为无符号值
-### 1.2.进制的表示
+### 进制的表示
 ```
 20   十进制
 024  八进制
 0x14 16进制
 ```
-### 1.3.浮点数的表示
+### 浮点数的表示
 ```
 3.14
 3.14e2 //3.14*10^2
@@ -36,15 +36,15 @@ cin << flag;//不能输入“true”和“false”
 3.14E2 //3.14*10^2
 ```
 
-### 1.4.转义序列
+### 转义序列
 ![转义](/Note/images/1.2.PNG)
 ![转义](/Note/images/1.3.PNG)
 
-### 1.5.字面值常量
+### 字面值常量
 ![字面值常量](/Note/images/1.4.PNG)
 
-##  2.变量
-### 2.1.变量的初始化
+##  变量
+### 变量的初始化
 ```
 int a = 10;
 int a = {10};
@@ -61,10 +61,7 @@ double salary = wage = 9999.99;      // wage未定义，如果wage定义了，�
 int i = 3.14;        // 警告，有隐式转化，i值为3。
 ```
 
-### 2.2.关键字
-![关键字](/Note/images/2.1.PNG)
-  
-### 2.3.作用域
+### 作用域
 ```cpp
 int a = 10;
 int main(){
@@ -97,9 +94,10 @@ cout << *p;//输出p指向地址对应的值
 cout << p;//输出p指向的地址
 ```
 - 4.空指针
+```cpp
 int *p = nullptr;
-空指针不能访问
-
+//空指针不能访问
+```
 - 5.void指针
 void指针可以存放任何类型的地址
 ```cpp
@@ -123,9 +121,7 @@ r = &a;//p会指向a
 *r = 0;//a的值变0
 ```
 
-- 8.指针所占的内存空间
-32位操作系统下占4个字节
-64位操作系统下占8个字节
+
 
 - 9.野指针
   指向非法空间的指针
@@ -133,16 +129,29 @@ r = &a;//p会指向a
   int *p = (int *)0x011;
   ```
   野指针也不能访问
-### 3.3.const
-- 1.初始化和const
+
+- 10.指向函数的指针
+```cpp
+int (*pf(int));//这是一个指向形参为int,返回值为int的指针
+int (*pf())[20];//这是一个指向形参为void ,返回int数组的函数指针
+int (*pf())[20]{
+    int (*pear)[20];
+    pear = calloc(20,sizeof(int));
+    if(!pear) longjmp(error,1); 
+    return pear;
+}
+```
+### const
+
+- 初始化和const
+const要初始化
 ```cpp
 int a = 10;
 const int b = a;//允许
 int c = b;//允许
 ```
-const要初始化
-- 2.const仅对当前文件有效，但可以用extern
-- 3.const和引用
+- const仅对当前文件有效，但可以用extern
+- const和引用
 ```cpp
 const int a = 10;
 int b = 20;
@@ -150,32 +159,28 @@ const int &r1 = a;//正确
 const int &r2 = b;//正确
 int &r3 = a;//错误，const引用只能引用const
 const int &r4 = 30;//正确
-//常常用早形参
+//常常用作形参
 void fun(const int &r);//防止r被修改
-```
 
-```cpp
 int a = 10;
 int &r = a;
 const &r1 = a;
 r = 0;//正确，a变为0
 r1 = 0;//错误
 ```
-- 4.const和指针
-
-  - 常量指针：const修饰指针
-    - 指针指向的值不可以改变，但指向的地址能改变 
+- const和指针
+**口诀：const修饰什么就不能改变什么**
+常量指针：const修饰指针
+  指针指向的值不可以改变，但指向的地址能改变 
 ```cpp
 int a = 10;
-const int *p = &a
+const int *p = &a//const没有修饰p
 ``` 
-
-  - 指针常量：const修饰常量
-    - 指针指向的值可以改变，但指向的地址不能改变 
+指针常量：const修饰常量
+  指针指向的值可以改变，但指向的地址不能改变 
 ```cpp
-
 int a = 10;
-int * const p = &a
+int * const p = &a//const修饰指针p,记住不是修饰*
 
 ``` 
   - 
@@ -187,13 +192,18 @@ const int * const p = &a
 
 ``` 
 
-### 3.4.constexpr和指针(看得不是很明白)
+### constexpr和指针(看得不是很明白)
 ```
 const int a = getsize();//不是常量表达式
 constexpr int a =getsize();//是常量表达式
 ```
 ### 3.5.处理类型
 1.typedef
+```cpp
+typedef int *ptr;//ptr是一个int类型指针
+typedef int (*fun)();//fun是一个值为int的函数指针
+typedef int arr[5]; //arr是一个长度为5的int数组
+```
 2.auto
 3.decltype
 返回操作数的数据类型
@@ -220,8 +230,8 @@ int &&r1 = r;//错误,rr1是左值
 ```
 int &&rr = std::move(4)
 ```
-## 4.结构体
-### 4.1结构体
+## 结构体,联合,指针
+### 结构体
 ```cpp
 struct Book
 {
@@ -238,7 +248,7 @@ struct Book books[3] =  {
                     }
 ```
 
-### 4.2结构体与指针
+### 结构体与指针
 ```cpp
 struct Book
 {
@@ -250,6 +260,25 @@ struct Book
 struct Book book = {"book",10,1};
 struct Book *p = &book;
 cout << p->name;
+```
+
+### 联合union
+联合和结构体类似，但联合的空间大小由内部最大的决定
+```cpp
+//U的大小是由double的大小决定的
+union U{
+    int a;
+    double b;
+}
+```
+
+### 枚举enum
+```cpp
+enum sizes{
+    small = 7,
+    medium,
+    large = 10
+};
 ```
 
 ## 5.命名空间
@@ -285,7 +314,7 @@ void fun1(){
 }
 ```
 
-## 容器与迭代器
+## 容器
 ![其他容器](/Note/images/7.3.PNG)
 ### vector 
 vector相较于数组是动态空间，可以动态扩展
@@ -426,6 +455,13 @@ string substr(int pos = 0,int n = npos) const;//返回从pos开始的n个字符
 char c
 isalnum(c);//是否为数字或字符串
 tolower(c);//转化为小写
+```
+
+- C风格字符
+```cpp
+size_t strlen(char *)//字符串长度
+char *strcat(char *s1,const char *s2);//拼接字符串,也可以用来复制字符串
+int strcmp(const char *s1,const  char*s2)//比较字符串 
 ```
 
 ### deque容器
@@ -860,6 +896,8 @@ for (auto p = begin(a);p!=end(a);p++){
 4.二维数组常用的技巧
 ```cpp
 int arr[2][3]
+//注意sizeof返回的是无符号类型的
+
 sizeof(arr);//占用内存大小
 sizeof(arr[0]);//1行占用内存大小
 sizeof(arr[0][0]);//1个元素占用内
@@ -886,17 +924,22 @@ cout <<&a[0] ;//输出数组首元素地址，地址和上面一样
 ### 10.3.递增递减运算符
 a=i++;//a=i,i在自增
 a=++i;//i先自增，再赋值给a
-### 10.4.条件运算符
+### 条件运算符
 A:B?C;//如果A为真则执行B，否则执行C
-### 10.5.位运算符
+### 位运算符
 ![位运算符](/Note/images/10.1.PNG)
-### 10.6.sizeof
+```cpp
+i |= 1<<j;//set bit j
+i &=~(1<<j);//clear bit j
+```
+### sizeof
 统计类型所占大小
 ```
 sizeof(p);//p是一个指针，表述地址的大小，64位系统是8，32位是4
 sizeof(*p)；//表示指向对象类型的大小
+sizeof(int)*p//这里表示一个int的字节大小乘上p
 ```
-### 10.7.强制转换
+### 强制转换
 
 
 
@@ -931,9 +974,10 @@ const_cast&lt;string>c是错误的，const_cast不能转换类型
   i = long j*j;//相当于（（long）j）*j  l*i->l;
   i = long (j*j);//溢出
   ```
-### 10.8.运算优先级
+### 运算优先级
 ![运算优先级1](/Note/images/10.2.PNG)
 ![运算优先级2](/Note/images/10.3.PNG)
+
 
 ## 11.语句
 ### 11.1.条件语句
@@ -1562,7 +1606,7 @@ public:
 ```
 
 
-### 13.12空指针
+### 空指针
 ```cpp
 class Person{
     private:
@@ -1675,8 +1719,8 @@ int main(){
 ![string流](images/14.6.PNG)
 
 
-### 14.4 格式化输入输出
-1.输出格式
+### 格式化输入输出
+- 输出格式
 ```cpp
 cout << endl;//换行
 cout << boolalpha;//输出布尔值，true,false;
@@ -1705,11 +1749,31 @@ cout << setfill('#');//域的内部补白'#'
 ```
 ![格式化输入输出](images/14.7.PNG)
 
-2.输入格式
+- 输入格式
 ```cpp
 cin >> noskips;//能读取空白符号
 cin >> skipws;//默认状态，丢弃空白
 ```
+
+- C语言风格的格式化输出输入
+```cpp
+//最小字宽5，4位有效数字，右对齐
+printf("5.4%d",a);
+//最小字宽5，4位有效数字，左边对齐
+printf("-5.4%d",a);
+//科学计数法
+printf("%e",e);
+//10进制浮点数，最小字宽5，小数点后4位
+printf("5.4%f",e);
+//根据数的大小来显示指数还是10进制定点
+printf("%g",e);
+
+
+//格式化输入
+scanf("%d %d",&a,&b)
+scanf("%d,%d",&a,&b)//a,b之间逗号隔开
+```
+
 ### 14.5 未格式化输入输出
 [未格式化输入输出](images/14.8.PNG)
 [未格式化输入输出](images/14.9.PNG)
@@ -2109,6 +2173,8 @@ int main() {
 }
 ```
 ### 多态
+多态是指一个函数或操作符只有一个名字，但它可以用于几个不同的派生类，每个对象都实现操作的一种变型，表现一种最适合自身的行为
+
 多态的主要用途是经由一个共同的接口来影响类型的封装，这个接口通常定义在基类中。
 当类型有所增加，修改时候，我们的程序代码无需修改
 - 多态的基本概念
@@ -2926,3 +2992,31 @@ int main() {
 	return 0;
 }
 ```
+## 宏定义
+### #运算符
+转化为字符串字面量
+```cpp
+#define PRINT(n) printf(#n " = %d\n",n)
+
+int i = 5;
+int j = 1;
+PRINT(i/j);//输出 i/j = 5
+```
+### ##运算符
+将连个黏在一起
+
+### 预定义宏
+```cpp
+__LINE__ 行号
+__FILE__ 文件名
+__DATE__ 编译的日期
+__TIME__ 编译的时间
+__STDC__ 如果编译器符号C标准，返回1
+```
+
+## 调试的经验
+### 段错误
+- 解除引用一个包含非法值的指针
+- 解引用一个空指针
+- 没有访问权限。在只读的文本进行写
+- 堆栈或堆空间用完了
