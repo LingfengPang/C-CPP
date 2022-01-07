@@ -51,7 +51,7 @@ void gettoken(void){
     char *p = that.string;
     //略过空白字符
     while((*p = getchar()) == ' ');
-    if(isalnum(*p)){
+    if(isalnum(*p)){//数字，字母
         while(isalnum(*++p = getchar()));
         //把字符 char（一个无符号字符）推入到指定的流 stream 中;
         ungetc(*p,stdin);//推入输入流之中
@@ -66,7 +66,7 @@ void gettoken(void){
         return;
     }
     that.string[1] = '\0';
-    that.type = *p;
+    that.type = *p;//括号 
     return;
 }
 
@@ -76,6 +76,7 @@ read_to_first_identifer(){
         push(that);
         gettoken();
     }
+    //直到读到标识符
     printf("%s is ",that.string);
     gettoken();//继续读判断是不是数组或函数其他之类的
 }

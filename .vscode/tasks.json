@@ -7,7 +7,7 @@
       "command": "aos",
       "args": [
         "make",
-        "helloworld@haas100",
+        "test_kws_demo@haas100",
         "-c",
         "config"
       ],

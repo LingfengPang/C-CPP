@@ -5,9 +5,9 @@ Mange::Mange(/* args */){
     this->nums = 0;
 }
 void Mange::showMenu(){
-    cout << "i.Insert"<<endl;
-    cout << "s.Search"<<endl;
-    cout << "p.Show"<<endl;
+    cout << "1.Insert"<<endl;
+    cout << "2.Search"<<endl;
+    cout << "3.Show"<<endl;
     cout << "0.Exit "<<endl;   
 }
 
@@ -17,7 +17,8 @@ void Mange::insert(){
     cout <<"Please enter id:";
     cin >> id;
     cout <<"Please enter name:";
-    cin >>name;
+    cin.ignore();
+    getline(cin, name);
     cout << "Please enter num:";
     cin >>num;
     v.push_back(Invectory(id,name,num));
@@ -29,17 +30,19 @@ void Mange::search(){
     cin >> id;
     for(int i = 0;i<this->nums;i++){
         if(v[i].getId() == id){
-            cout << "found!"<<end;
+            cout << "found!" <<endl;
             return;
         }
     }
     cout << "not found"<<endl;
 }
 
+
 void Mange::show(){
-    printf("ID    Name      Num")
+    printf("ID    Name      Num\n");
     for(int i = 0;i<this->nums;i++){
-        printf("%2d    %s%d",this->v[i].getId(),this->v[i].getName(),this->v[i].getNum())
+        cout<<this->v[i].getId()<<this->v[i].getName()<<this->v[i].getNum()<<endl
+        //printf("%2d    %4s %2d",this->v[i].getId(),this->v[i].getName(),this->v[i].getNum());
     }
 
 }
@@ -49,31 +52,19 @@ int main(){
 
     int select;
     while(1){
-        JobM.showMenu();
+        mange.showMenu();
         cin >> select;
         switch(select){
             case 1:
-                JobM.add();
+                mange.insert();
             break;
             case 2:
                 //JobM.getEmp();
-                JobM.Show();
+                mange.search();
             break;
 
             case 3:
-                JobM.del();
-            break;
-            case 4:
-                JobM.fix();
-                break;
-            case 5:
-                JobM.find();
-            break;
-            case 6:
-                JobM.sort();
-            break;
-            case 7:
-                JobM.clean();
+                mange.show();
             break;
             case 0:
                 cout <<"goodbye!"<<endl;

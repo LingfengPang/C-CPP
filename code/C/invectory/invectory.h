@@ -1,5 +1,5 @@
-#include <iostream>;
-#include <string>;
+#include <iostream>
+#include <string>
 #include <vector>
 using namespace std;
 class Invectory
@@ -16,7 +16,7 @@ public:
 
     }
     Invectory(int id,string name,int num):id(id),name(name),num(num){}
-    ~Invectory();
+    ~Invectory(){}
 
     int getId(){return id;}
     string getName(){return name;}

@@ -141,6 +141,13 @@ int (*pf())[20]{
     return pear;
 }
 ```
+
+- 受限指针restrict
+不允许除p以外的方式访问p指向的对象
+源码里经常用到，往往表示两个参数不能指向同一个对象
+```cpp
+int * restrict p;
+```
 ### const
 
 - 初始化和const
@@ -207,14 +214,19 @@ typedef int arr[5]; //arr是一个长度为5的int数组
 2.auto
 3.decltype
 返回操作数的数据类型
-```
+```cpp
 decltype(fun()) sum = x;类型是fun()函数返回的类型
 ```
 decltype((var))双括号的结果是引用
 decltype(var)单括号内只有var是引用才会返回引用\
 decltype(var1=var2)返回的是var&
 
-
+4.register
+存放在寄存器里
+用于需要频繁访问的变量
+```cpp
+register int i;
+```
 ### 3.6.右值引用
 通过&& 而 不是 & 来获取右值引用
 一般绑定到即将要销毁的对象
@@ -240,12 +252,20 @@ struct Book
     double price = 0.0;//售出价格
 };
 
+
 struct Book book = {"book",10,1};
 struct Book books[3] =  {
                         {"book1",10,1},
                         {"book2",20,21},
                         {"book2",30,3},
                     }
+
+struct Book
+{
+    std::string name;//书名
+    int num : 5;//声明占5位
+    double price = 0.0;//售出价格
+};
 ```
 
 ### 结构体与指针
@@ -263,7 +283,7 @@ cout << p->name;
 ```
 
 ### 联合union
-联合和结构体类似，但联合的空间大小由内部最大的决定
+联合和结构体类似，但联合的空间大小由内部最大的决定,可以节省很多空间
 ```cpp
 //U的大小是由double的大小决定的
 union U{
@@ -847,7 +867,7 @@ int &r1[10];//错误不存在数组引用
 int (&r2)[10];//r2引用1个含有10个整数的数组
 ```
 ### 9.2.指针与数组
-```
+```cpp
 int a[10] = {……};//
 int *p1 = &a[0];
 int *p2 = a;//相当于上面
@@ -882,6 +902,14 @@ int a4[][3] = {1,2,3,4,5,6};//2行3列
 int a[3][4];
 int (&row)[4] = a[1];//row绑定到第二行的四元素上
 int (*p)[4] = a[1];//p指向第二行的四元素
+
+
+i = *(a[1]+2);//a[1][2]
+i = *(*(a+1)+2)
+
+int *p = a[1];//指向第2行
+int *p = a;//非法
+int (*p)[4] = a;//括号一定要有 []优先级更高
 ```
 3.多维数组与auto
 ```cpp
@@ -927,10 +955,21 @@ a=++i;//i先自增，再赋值给a
 ### 条件运算符
 A:B?C;//如果A为真则执行B，否则执行C
 ### 位运算符
-![位运算符](/Note/images/10.1.PNG)
 ```cpp
 i |= 1<<j;//set bit j
 i &=~(1<<j);//clear bit j
+i ^= (1<<j);//切换i位置
+
+•int __builtin_ffs (unsigned int x)
+返回x的最后一位1的是从后向前第几位，比如7368（1110011001000）返回4。
+•int __builtin_clz (unsigned int x)
+返回前导的0的个数。
+•int __builtin_ctz (unsigned int x)
+返回后面的0个个数，和__builtin_clz相对。
+•int __builtin_popcount (unsigned int x)
+返回二进制表示中1的个数。
+•int __builtin_parity (unsigned int x)
+返回x的奇偶校验位，也就是x的1的个数模2的结果。
 ```
 ### sizeof
 统计类型所占大小
@@ -1886,6 +1925,7 @@ int main()
 
 
 ## 16.内存管理
+### 概述
 ```cpp
 void *p = malloc(512);
 delete p
@@ -1910,6 +1950,22 @@ int *p5 = alloc::allocate(5);
 
 allocator<int>().deallocate(p5,5);
 
+```
+### C语言的内存管理
+```cpp
+malloc-分配内存快，但不初始化
+	void *malloc(int num);
+calloc 分配内存块，且清零
+void *calloc(int num, int size);
+realloc 调整先前分配的内存块大小
+void *realloc(void *address, int newsize);
+
+	void free(void *address);
+该函数释放 address 所指向的内存块,释放的是动态分配的内存空间。
+
+char *p = malloc(4);
+free(p);
+strcpy(p,"abc");//错误
 ```
 ### 16.1.new与delete
 ```cpp

@@ -78,75 +78,8 @@ void initialize(),get_array(),get_params(),get_lparen(),get_ptr_part(),get_type(
 void (*nextstate)(void) = initialize;
 
 
-// read_to_first_identifer(){
-//     gettoken();
-//     while(that.type != IDENTIFIER){
-//         push(that);
-//         gettoken();
-//     }
-//     printf("%s is ",that.string);
-//     gettoken();//继续读判断是不是数组或函数其他之类的
-// }
-
-// deal_with_arrys(){
-//     while(that.type == '['){
-//         printf("array ");
-//         gettoken();//数字
-//         if(isdigit(that.string[0])){
-//             printf("0..%d ",atoi(that.string)-1);
-//             gettoken();//读取‘]’
-
-//         }
-//         gettoken();//读取一个标记
-//         printf("of ");
-//     }
-// }
-
-// deal_with_functions_args(){
-//     while(that.type != ')'){
-//         gettoken();
-//     }
-//     gettoken();
-//     printf("function returning " );
-// }
-
-// deal_with_pointers(){
-//     while(stack[top].type == '*'){
-//         printf("%s ",pop.string);
-//     }
-// }
-
-// deal_with_declarator(){
-//     switch (that.type)
-//     {
-//     case '[':deal_with_arrys();break;
-//     case '(':deal_with_functions_args();break;
-    
-//     default:
-//         break;
-//     }
-
-//     deal_with_pointers();
-
-//     while(top >= 0){
-//         if(stack[top].type == '('){
-//             pop;
-//             gettoken();//读取‘）’之后的符号
-//             deal_with_declarator();
-//         }
-//         else{
-//             printf("%s ",pop.string);
-//         }
-//     }
-// }
-
 int main(){
-    // while(1){
-    // read_to_first_identifer();
-    // deal_with_declarator();
-    // printf("\n");
-    // }
-    // return 0;
+
     while(nextstate != NULL)
         nextstate();
     system("pause");

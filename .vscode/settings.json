@@ -13,7 +13,7 @@
         "utility": "cpp",
         "*.tcc": "cpp"
     },
-    "aliosStudio.name": "helloworld",
+    "aliosStudio.name": "test_kws_demo",
     "aliosStudio.hardware.board": "haas100",
     "aliosStudio.comPort": "COM9                ",
     "aliosStudio.hardware.baudrate": "1500000"
