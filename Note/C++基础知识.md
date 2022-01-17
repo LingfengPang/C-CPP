@@ -45,7 +45,7 @@ cin << flag;//不能输入“true”和“false”
 
 ##  变量
 ### 变量的初始化
-```
+```cpp
 int a = 10;
 int a = {10};
 int a(10);
@@ -54,7 +54,7 @@ int a{10};
 变量的初始化不是赋值，赋值是将原变量的值先擦除在给值。
 
 下面是一些错误和有问题的初始化
-```
+```cpp
 std::cin >> int input_value          // 错误，不能在输入输出语句中定义变量。
 int i = { 3.14 };                // 错误，在初始化列表中使用浮点型初始化int变量可能会丢失数据，编译器会拒绝执行
 double salary = wage = 9999.99;      // wage未定义，如果wage定义了，则该语句可以正常执行，最终wage和salary相等
@@ -1160,6 +1160,32 @@ int Sum(const initializer_list<int> &il)
 }
 ```
 
+### C语言里面的可变参数
+C语言里面的可变参数只能从头开始访问，中间任意位置可以结束
+但是不能从中间访问
+```cpp
+#include <stdio.h>
+#include <stdarg.h>
+
+void print_args(int count, ...);
+
+int main(int argc, char* argv[]) {
+	print_args(5,1,2,3,4,5);
+	return 0; 
+}
+
+void print_args(int count, ...) {
+	int i, value;
+	va_list arg_ptr;
+	va_start(arg_ptr, count);
+	for(i=0; i<count; i++) {
+		value = va_arg(arg_ptr,int);
+		printf("position %d = %d\n", i+1, value);
+	}
+	va_end(arg_ptr);//结束访问
+}
+```
+
 ### 12.6函数返回
 1.不要返回局部对象的引用
 ```cpp
@@ -1960,7 +1986,7 @@ void *calloc(int num, int size);
 realloc 调整先前分配的内存块大小
 void *realloc(void *address, int newsize);
 
-	void free(void *address);
+void free(void *address);
 该函数释放 address 所指向的内存块,释放的是动态分配的内存空间。
 
 char *p = malloc(4);
